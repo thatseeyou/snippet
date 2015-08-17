@@ -1,0 +1,15 @@
+#!/bin/bash
+#aws --output table ec2 describe-instances --filters "Name=tag-key,Values=student" "Name=tag-value,Values=hanah" --query 'Reservations[].Instances[].{student:Tags[?Key == `student`].Value | [0], State:State.Name, PublicIP:PublicIpAddress,PrivateIP:PrivateIpAddress,InstanceId:InstanceId}'
+
+aws --output table \
+ec2 describe-instances \
+--query \
+'Reservations[].Instances[].{'\
+'PrivateIP:PrivateIpAddress,'\
+'PublicIP:PublicIpAddress,'\
+'State:State.Name,'\
+'InstanceId:InstanceId,'\
+'Name:Tags[?Key == `Name`].Value | [0],'\
+'Student:Tags[?Key == `student`].Value | [0]'\
+'}|sort_by(@,&Name)'
+

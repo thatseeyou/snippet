@@ -1,0 +1,71 @@
+#!/bin/bash
+#
+# 2015-07-31 sangyoung@gmail.com
+# * initial write
+#
+
+#-----------------------------------------------------------------------------------------
+#|                                   DescribeInstances                                   |
+#+------------+-------------+----------------+----------------+-----------+--------------+
+#| InstanceId |    Name     |   PrivateIP    |   PublicIP     |   State   |   Student    |
+#+------------+-------------+----------------+----------------+-----------+--------------+
+#|  i-0a3daec2|  HADOOP-1-1 |  172.31.12.152 |  52.27.246.188 |  running  |  hanah       |
+#|  i-b92bb871|  HADOOP-1-2 |  172.31.12.56  |  None          |  stopped  |  hanah       |
+#|  i-ff2fbc37|  HADOOP-1-3 |  172.31.2.102  |  None          |  stopped  |  hanah       |
+#|  i-b82fbc70|  HADOOP-1-4 |  172.31.10.51  |  None          |  stopped  |  hanah       |
+#|  i-4f2ebd87|  HADOOP-2-1 |  172.31.14.128 |  52.24.129.224 |  running  |  kangmj      |
+#|  i-362fbcfe|  HADOOP-2-2 |  172.31.10.95  |  None          |  stopped  |  kangmj      |
+#|  i-982ebd50|  HADOOP-2-3 |  172.31.0.65   |  None          |  stopped  |  kangmj      |
+#|  i-d12cbf19|  HADOOP-2-4 |  172.31.11.32  |  None          |  stopped  |  kangmj      |
+#|  i-af2dbe67|  HADOOP-3-1 |  172.31.4.10   |  54.148.255.83 |  running  |  rosettia    |
+#|  i-ced24006|  HADOOP-3-2 |  172.31.2.208  |  None          |  stopped  |  rosettia    |
+#|  i-ef2cbf27|  HADOOP-3-3 |  172.31.12.84  |  None          |  stopped  |  rosettia    |
+#|  i-1bd240d3|  HADOOP-3-4 |  172.31.12.101 |  None          |  stopped  |  rosettia    |
+#|  i-b5d0427d|  HADOOP-4-1 |  172.31.10.135 |  52.26.80.25   |  running  |  parksunguk  |
+#|  i-01d143c9|  HADOOP-4-2 |  172.31.15.19  |  None          |  stopped  |  parksunguk  |
+#|  i-94d6445c|  HADOOP-4-3 |  172.31.7.15   |  None          |  stopped  |  parksunguk  |
+#|  i-1cd644d4|  HADOOP-4-4 |  172.31.5.63   |  None          |  stopped  |  parksunguk  |
+#|  i-afad3467|  Manager    |  172.31.1.1    |  54.148.229.17 |  running  |  syoh        |
+#+------------+-------------+----------------+----------------+-----------+--------------+
+#
+
+function usage 
+{
+	echo "Usage:$(basename $0) <hanah|kangmj|rosettia|parksunguk> <start|stop>"
+	exit 1
+}
+
+if [[ -z "$2" ]];then
+	usage
+fi
+
+user="$1"
+cmd="$2"
+
+if [[ "$cmd" != "start" && "$cmd" != "stop" ]];then
+	usage
+fi
+
+case "$user" in
+"hanah")
+	instance_ids="i-0a3daec2 i-b92bb871 i-ff2fbc37 i-b82fbc70"
+	;;
+"kangmj")
+	instance_ids="i-4f2ebd87 i-362fbcfe i-982ebd50 i-d12cbf19"
+	;;
+"rosettia")
+	instance_ids="i-af2dbe67 i-ced24006 i-ef2cbf27 i-1bd240d3"
+	;;
+"parksunguk")
+	instance_ids="i-b5d0427d i-01d143c9 i-94d6445c i-1cd644d4"
+	;;
+"syoh")
+	instance_ids="i-633254ab i-9335535b i-4533558d i-ea305622"
+	;;
+*)
+	usage
+	;;
+esac
+
+aws --output text ec2 $cmd-instances --instance-ids $instance_ids
+

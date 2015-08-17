@@ -1,0 +1,10 @@
+#!/bin/bash
+if [[ -z "$1" ]];then
+	echo "Usage:$(basename $0) <instance-id>"
+	echo "      Find instance-id by running ec2-list"
+	exit 1
+fi
+
+instance_id="$1"
+
+aws --output text ec2 start-instances --instance-ids "$instance_id"
